@@ -1,0 +1,13 @@
+
+---
+title: 'My Title'
+author: "Me me me me!"
+output: html_document
+bibliography: references.bib
+---
+
+Application written in R [@RCoreTeam]
+
+# REFERENCES
+
+

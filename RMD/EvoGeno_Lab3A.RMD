@@ -1,0 +1,146 @@
+---
+title: "Lab 3A"
+author: "Bryanna Matias"
+date: "9/7/2020"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r, eval=FALSE}
+download.file(url = "https://ndownloader.figshare.com/files/2292169",
+              destfile = "data/portal_data_joined.csv")
+```
+
+```{r}
+surveys <- read_csv("data/portal_data_joined.csv")
+```
+
+```{r}
+view(surveys)
+```
+
+## Content
+
+```{r}
+head(surveys)
+```
+
+```{r}
+tail(surveys)
+```
+## Size
+
+```{r}
+dim(surveys)
+```
+
+```{r}
+nrow(surveys)
+```
+
+```{r}
+ncol(surveys)
+```
+
+## Names
+
+```{r}
+names(surveys)
+```
+
+```{r}
+rownames(surveys)
+```
+
+## Summary
+
+```{r}
+str(surveys)
+```
+
+## Challenge 1
+
+Class: data frame
+
+Rows: 34,786
+
+Columns: 13
+
+Species: 48
+
+```{r}
+summary(surveys)
+```
+
+## Challenge 2
+
+```{r}
+surveys[200, ]
+```
+
+
+```{r}
+#Saving 'n_rows' to improve readability
+
+n_rows<- nrow(surveys)
+```
+
+
+```{r}
+surveys_last <- surveys[n_rows, ]
+surveys_last
+```
+
+```{r}
+surveys_middle <- surveys[n_rows / 2, ]
+surveys_middle
+```
+
+```{r}
+surveys_head <- surveys[-(7:n_rows), ]
+surveys_head
+```
+
+## Factors
+
+```{r}
+sex <- factor(surveys$sex)
+head(sex)
+#> [1] M M        
+#> Levels:  F M
+levels(sex)
+#> [1] ""  "F" "M"
+levels(sex)[1] <- "undetermined"
+levels(sex)
+#> [1] "undetermined" "F"            "M"
+head(sex)
+#> [1] M            M            undetermined undetermined undetermined
+#> [6] undetermined
+#> Levels: undetermined F M
+```
+
+## Challenge 3
+
+```{r}
+levels(sex)[2:3] <- c("female", "male")
+sex <- factor(sex, levels = c("female", "male", "undetermined"))
+plot(sex)
+```
+
+## Challenge 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+

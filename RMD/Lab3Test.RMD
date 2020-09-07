@@ -1,0 +1,22 @@
+---
+title: "EVoGeno"
+author: "Bryanna Matias"
+date: "9/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+

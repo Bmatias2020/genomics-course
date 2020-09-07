@@ -1,0 +1,14 @@
+---
+title: "Evolutionary Genomics & Bioinformatics"
+author: "Bryanna Matias"
+date: "8/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+EvoGeno 697 Lab Reports
+[Lab 2](Lab2.html)
+![](images/Profile.jpg)
