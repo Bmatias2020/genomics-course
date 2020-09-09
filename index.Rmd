@@ -10,5 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 EvoGeno 697 Lab Reports
-[Lab 2](RMD/Lab2.html)
 ![](images/Profile.jpg)
+[Lab 2](RMD/Lab2.html)
+[Lab 3](RMD/EvoGeno_Lab3A.html)
+
