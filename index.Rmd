@@ -8,11 +8,11 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ![](images/Profile.jpg)
 
-## EvoGeno 697 Lab Reports
+* [Lab 2](EvoGeno_Lab2.html)
 
-* [Lab 2](RMD/Lab2.html)
+* [Lab 3A](EvoGeno_Lab3A.html)
 
-* [Lab 3](RMD/EvoGeno_Lab3A.html)
-
+* [Lab 3B](EvoGeno_Lab3B.html)
