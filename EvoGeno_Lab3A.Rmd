@@ -1,0 +1,219 @@
+---
+title: "Lab 3A"
+author: "Bryanna Matias"
+date: "9/7/2020"
+output: html_document
+bibliography: references.bib
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r, eval=FALSE}
+download.file(url = "https://ndownloader.figshare.com/files/2292169",
+              destfile = "data/portal_data_joined.csv")
+```
+
+```{r}
+surveys <- read_csv("data/portal_data_joined.csv")
+```
+
+```{r}
+view(surveys)
+```
+
+## Content
+
+```{r}
+head(surveys)
+```
+
+```{r}
+tail(surveys)
+```
+## Size
+
+```{r}
+dim(surveys)
+```
+
+```{r}
+nrow(surveys)
+```
+
+```{r}
+ncol(surveys)
+```
+
+## Names
+
+```{r}
+names(surveys)
+```
+
+```{r, eval=FALSE}
+rownames(surveys)
+```
+
+## Summary
+
+```{r}
+str(surveys)
+```
+
+## Challenge 1
+
+Class: data frame
+
+Rows: 34,786
+
+Columns: 13
+
+Species: 48
+
+```{r}
+summary(surveys)
+```
+
+## Challenge 2
+
+```{r}
+surveys[200, ]
+```
+
+
+```{r}
+#Saving 'n_rows' to improve readability
+
+n_rows<- nrow(surveys)
+```
+
+
+```{r}
+surveys_last <- surveys[n_rows, ]
+surveys_last
+```
+
+```{r}
+surveys_middle <- surveys[n_rows / 2, ]
+surveys_middle
+```
+
+```{r}
+surveys_head <- surveys[-(7:n_rows), ]
+surveys_head
+```
+
+## Factors
+
+```{r}
+### Factoring Categorical Data
+
+sex <- factor(c("male", "female", "female", "male"))
+
+levels(sex)
+```
+
+```{r}
+nlevels(sex)
+```
+
+```{r}
+sex # current order
+```
+
+```{r}
+sex <- factor(sex, levels = c("male", "female"))
+
+sex # after re-ordering
+```
+
+```{r}
+### convert a factor to a character vector
+
+as.character(sex)
+```
+
+```{r}
+### Comparison of vector to levels
+
+year_fct <- factor(c(1990, 1983, 1977, 1998, 1990))
+
+
+as.numeric(levels(year_fct))[year_fct] #Recommended
+```
+
+```{r}
+### Renaming Factors
+
+### bar plot of the number of females and males
+
+plot(as.factor(surveys$sex))
+```
+
+```{r}
+sex <- factor(surveys$sex)
+head(sex)
+```
+
+```{r}
+levels(sex)
+```
+
+```{r}
+levels(sex)[1] <- "undetermined" 
+levels(sex)
+```
+
+```{r}
+head(sex)
+```
+
+## Challenge 3
+
+```{r}
+levels(sex)[2:3] <- c("female", "male")
+
+sex <- factor(sex, levels = c("female", "male", "undetermined"))
+
+plot(sex)
+```
+
+## Compare the difference between our data read as `factor` vs `character`
+
+```{r}
+surveys <- read.csv("data/portal_data_joined.csv", stringsAsFactors = TRUE)
+str(surveys)
+surveys <- read.csv("data/portal_data_joined.csv", stringsAsFactors = FALSE)
+str(surveys)
+## Convert the column "plot_type" into a factor
+surveys$plot_type <- factor(surveys$plot_type)
+```
+
+### Challenge 4
+
+```{r}
+### We have seen how data frames are created when using read.csv(), but they can also be created by hand with the data.frame() function. There are a few mistakes in this hand-crafted data.frame. Can you spot and fix them? Don’t hesitate to experiment!
+
+animal_data <- data.frame("animal" = c("dog", "cat", "sea cucumber", "sea urchin"), feel = c("furry","furry", "squishy", "spiny"), weight = c(45, 8, 1.1, 0.8))
+
+### Can you predict the class for each of the columns in the following example? Check your guesses using str(country_climate):
+
+country_climate <- data.frame(
+       country = c("Canada", "Panama", "South Africa", "Australia"),
+       climate = c("cold", "hot", "temperate", "hot/temperate"),
+       temperature = c(10, 30, 18, 15),
+       northern_hemisphere = c(TRUE, TRUE, FALSE, FALSE),
+       has_kangaroo = c(FALSE, FALSE, FALSE, TRUE))
+
+str(country_climate)
+```
+
+Application witten in R [@RCoreTeam] using the Shiny framework [@Chang2015]
+
+# REFERENCES
+
+
+
+
