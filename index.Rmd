@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ![](images/Profile.jpg)
+
 ## R Labs
 
 * Lab 1: [Introduction to R and Reproducible Research](EvoGeno_Lab1.html)
