@@ -21,4 +21,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 3B: [Data Wrangling: Manipulating data](EvoGeno_Lab3B.html)
 
+* Lab 4: [Data wrangling and graphing COVID-19 reporting data (Part 1)](Evogeno_Lab4.html)
+
 
