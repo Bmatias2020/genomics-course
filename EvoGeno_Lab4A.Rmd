@@ -133,7 +133,7 @@ ggplot(data = surveys_complete, mapping = aes(x = species_id, y = hindfoot_lengt
     geom_jitter(aes(color = "plot_id"))
 ```
 
-# Lab 5 Challenges: Plotting Time Series Date
+# Lab 5 Challenges: Plotting Time Series Data
 
 ```{r}
 #Let’s calculate number of counts per year for each genus. First we need to group the data and count records within each group:
@@ -163,7 +163,7 @@ ggplot(data = yearly_counts, aes(x = year, y = n, color = genus)) +
 ```
 
 
-#Integrating the pipe operator with ggplot2
+# Integrating the pipe operator with ggplot2
 
 ```{r}
 #In the previous lesson, we saw how to use the pipe operator %>% to use different functions in a sequence and create a coherent workflow. We can also use the pipe operator to pass the data argument to the ggplot() function. 
@@ -184,7 +184,7 @@ yearly_counts_graph <- surveys_complete %>%
 yearly_counts_graph
 ```
 
-#Faceting
+# Faceting
 
 ```{r}
 #ggplot has a special technique called faceting that allows the user to split one plot into multiple plots based on a factor included in the dataset. We will use it to make a time series plot for each species:
