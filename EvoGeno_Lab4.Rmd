@@ -1,0 +1,170 @@
+---
+title: "Lab 4"
+author: "Bryanna Matias"
+date: "9/14/2020"
+output: html_document
+bibliography: references.bib
+---
+
+```{r}
+library(tidyverse)
+```
+
+### Making a Graph from the Daily Reports from 3/11/2020 and 9/13/2020
+
+```{r}
+report_03_11_2020 <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-11-2020.csv")) %>%
+  rename(Country_Region = "Country/Region", Province_State = "Province/State")
+```
+```{r}
+report_09_13_2020 <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/09-13-2020.csv"))
+```
+
+## Exercise 1
+
+* Part 1: Interactive Data Tables
+
+```{r}
+library(DT)
+```
+
+# March Data
+```{r}
+str(report_03_11_2020)
+```
+
+```{r, eval=FALSE}
+View(report_03_11_2020)
+```
+
+```{r}
+datatable(report_03_11_2020)
+```
+
+#September Data
+
+```{r}
+str(report_09_13_2020)
+```
+
+```{r, eval=FALSE}
+View(report_09_13_2020)
+```
+
+```{r}
+datatable(report_09_13_2020)
+```
+
+* Part 2: Collecting Data From Multiple Entries Representing Different Regions
+
+```{r}
+country1 <-report_03_11_2020 %>% group_by(Country_Region) %>% summarise(Deaths = sum(Deaths))
+```
+
+* Part 3: Counts of Confirmed Cases per U.S. State using filter()
+
+```{r}
+# Deaths in March
+USA1 <- report_03_11_2020 %>% filter(Country_Region == "US")%>% group_by(Province_State) %>% summarise(Deaths = sum(Deaths))%>% slice(1:10)
+```
+```{r}
+# Deaths in September
+USA2 <- report_09_13_2020 %>% filter(Country_Region == "US")%>% group_by(Province_State) %>% summarise(Deaths = sum(Deaths))%>% slice(1:10)
+```
+
+```{r}
+#Confirmed in March
+USA3 <- report_03_11_2020 %>% filter(Country_Region == "US")%>% group_by(Province_State) %>% summarise(Confirm = sum(Confirmed))%>% slice(1:10)
+```
+```{r}
+#Confirmed in September
+USA4 <- report_09_13_2020 %>% filter(Country_Region == "US")%>% group_by(Province_State) %>% summarise(Confirm = sum(Confirmed))%>% slice(1:10)
+```
+
+* Part 4: Data of Only Top 10 Countries using arrange_by() and slide()
+
+```{r}
+Deaths <- country1 %>% arrange(desc(Deaths)) %>% slice(1:10)
+```
+```{r}
+country2 <- report_03_11_2020 %>% group_by(Country_Region) %>% summarise(Confirm = sum(Confirmed))
+```
+```{r}
+Confirmed <- country2 %>% arrange(desc(Confirm)) %>% slice(1:10)
+```
+
+## Exercise 2
+
+* Part 1: ggplots
+
+```{r}
+#March Data
+ggplot(data = Deaths, aes(x = Country_Region, y = Deaths, color = Country_Region)) + geom_point () + theme(legend.position="none") 
+
+#+ labs( x + "Days" , y + "Death")
+```
+
+```{r}
+ggplot(data = Confirmed, aes(x = Country_Region, y = Confirm, color = Country_Region)) + geom_point () + theme(legend.position="none") 
+
+#+ labs( x = "Days" , y + "Confirmed")
+```
+
+```{r}
+country3 <- report_09_13_2020 %>% group_by(Country_Region) %>% summarise(Deaths = sum(Deaths))
+```
+
+```{r}
+Deaths <- country3 %>% arrange(desc(Deaths)) %>% slice(1:10)
+```
+
+```{r}
+country4 <- report_09_13_2020 %>% group_by(Country_Region) %>% summarise(Confirm = sum(Confirmed))
+```
+```{r}
+Confirmed <- country4 %>% arrange(desc(Confirm)) %>% slice(1:10)
+```
+
+```{r}
+#September Data
+ggplot(data = Deaths, aes(x = Country_Region , y = Deaths , color = Country_Region)) + geom_point () + theme(legend.position = "none")
+```
+
+```{r}
+ggplot(data = Confirmed, aes(x = Country_Region , y = Confirm , color = Country_Region)) + geom_point () + theme(legend.position = "none")
+```
+
+* Part 2: geom_bar
+
+```{r}
+#Deaths in March
+ggplot(data = USA1, aes(x = Province_State , y = Deaths , color = Province_State)) + geom_bar(stat="identity") + theme(legend.position = "none")
+```
+
+```{r}
+#Deaths in September
+ggplot(data = USA2, aes(x = Province_State , y = Deaths , color = Province_State)) + geom_bar(stat="identity") + theme(legend.position = "none")
+```
+
+```{r}
+#Confirmed in March
+ggplot(data = USA3, aes(x = Province_State , y = Confirm , color = Province_State)) + geom_bar(stat="identity") + theme(legend.position = "none")
+```
+
+```{r}
+#Confirmed in September
+ggplot(data = USA4, aes(x = Province_State , y = Confirm , color = Province_State)) + geom_bar(stat="identity") + theme(legend.position = "none")
+```
+
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
+
+# References
+
+
+
+
+
+
+
+
+
