@@ -15,16 +15,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 1: [Introduction to R and Reproducible Research](EvoGeno_Lab1.html)
 
-* Lab 2: [Git, GitHub and Rstudio project](EvoGeno_Lab2.html)
+* Lab 2: [Git, GitHub and Rstudio Project](EvoGeno_Lab2.html)
 
-* Lab 3A: [Data Wrangling: Starting with Data ](EvoGeno_Lab3A.html)
+* Lab 3A: [Data Wrangling: Starting with Data](EvoGeno_Lab3A.html)
 
 * Lab 3B: [Data Wrangling: Manipulating data](EvoGeno_Lab3B.html)
 
 * Lab 4: [Data wrangling and graphing COVID-19 reporting data (Part 1)](EvoGeno_Lab4.html)
 
-* Lab 4A: [Lab 4/5 Exercises](EvoGeno_Lab4A.html)
+* Lab 4A: [Lab 4A/5A Exercises](EvoGeno_Lab4A.html)
 
-* Lab 5: [Data wrangling and graphing COVID-19 reporting data (Part 2)](EvoGeno_Lab5.Rmd)
+* Lab 5: [Data wrangling and graphing COVID-19 reporting data (Part 2)](EvoGeno_Lab5.html)
 
 
