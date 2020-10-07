@@ -578,22 +578,6 @@ head(Confirmed_State_6_13_9_13_joined)</code></pre>
 ## 4 Arkansas       US                         6 US                     70219
 ## 5 California     US                       282 US                    761728
 ## 6 Colorado       US                        49 US                     61293</code></pre>
-<pre class="r"><code>#This results in the values for Guam, Northern Mariana Islands, Puerto Rico and the Virgin Islands being NA for 3/13
-
-tail(Confirmed_State_6_13_9_13_joined, 5)</code></pre>
-<pre><code>## # A tibble: 5 x 5
-## # Groups:   Province_State [5]
-##   Province_State       Country_Region.x Confirmed.x Country_Region.y Confirmed.y
-##   &lt;chr&gt;                &lt;chr&gt;                  &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;
-## 1 Wyoming              US                         1 US                      4346
-## 2 Guam                 &lt;NA&gt;                      NA US                      1863
-## 3 Northern Mariana Is… &lt;NA&gt;                      NA US                        60
-## 4 Puerto Rico          &lt;NA&gt;                      NA US                     37380
-## 5 Virgin Islands       &lt;NA&gt;                      NA US                      1220</code></pre>
-<pre class="r"><code>#or 
-
-which(is.na(Confirmed_State_6_13_9_13_joined))</code></pre>
-<pre><code>## [1] 111 112 113 114 168 169 170 171</code></pre>
 <pre class="r"><code># Let’s turn the NAs into 0. Also notice that we know have columns Confirmed.x Country_Region.x, Confirmed.y Country_Region.y. So let’s rename the Confirmed columns and delete the Country_Region columns
 
 Confirmed_State_6_13_9_13_joined &lt;- full_join(Confirmed_State_6_13,
