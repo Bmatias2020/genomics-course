@@ -14,8 +14,7 @@ library(tidyverse)
 ```
 
 ```{r}
-Confirmed_State_6_13 <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-13-2020.csv")) %>%
-  rename(Country_Region = "Country/Region", Province_State = "Province/State") %>% 
+Confirmed_State_6_13 <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/06-13-2020.csv")) %>% 
   filter (Country_Region == "US") %>% 
   group_by(Province_State, Country_Region) %>% 
   summarise(Confirmed = sum(Confirmed)) 
@@ -74,7 +73,7 @@ Confirmed_State_6_13_9_13_joined <- full_join(Confirmed_State_6_13,
 head(Confirmed_State_6_13_9_13_joined)
 ```
 
-```{r, fig.width = 6, fig.height = 10}
+```{r, fig.width = 5, fig.height = 10}
 # Switching between wide and long table formats.
 
 Confirmed_State_6_13_9_13_joined_long <- Confirmed_State_6_13_9_13_joined %>% 
@@ -84,7 +83,7 @@ Confirmed_State_6_13_9_13_joined_long <- Confirmed_State_6_13_9_13_joined %>%
 ggplot(Confirmed_State_6_13_9_13_joined_long, aes(x = Confirmed,  y = Province_State))  + geom_bar(stat="identity",aes(color = Date))
 ```
 
-```{r, fig.width = 6, fig.height = 10}
+```{r, fig.width = 5, fig.height = 10}
 
 ggplot(Confirmed_State_6_13_9_13_joined_long, aes(x = Confirmed,  y = Province_State))  + 
     geom_point(aes(color = Date)) 
@@ -92,7 +91,7 @@ ggplot(Confirmed_State_6_13_9_13_joined_long, aes(x = Confirmed,  y = Province_S
 
 # Exercise 3
 
-```{r, fig.width = 6, fig.height = 10}
+```{r, fig.width = 5, fig.height = 10}
 # Add more informative x and y labels and a title to the above graph in Ex2.
 
 ggplot(Confirmed_State_6_13_9_13_joined_long, aes(x = Confirmed,  y = Province_State))  + geom_bar(stat="identity",aes(color = Date)) +  labs(title="COVID-19 Confirmed Cases in US",
