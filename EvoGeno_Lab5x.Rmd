@@ -3,6 +3,7 @@ title: 'Lab 5A: Exercises'
 author: "Bryanna Matias"
 date: "10/7/2020"
 output: html_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -233,7 +234,9 @@ p <- ggplot(data_time, aes(x = Date,  y = Confirmed, color = Country_Region)) +
 animate(p, end_pause = 15)
 ```
 
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
 
+# References
 
 
 

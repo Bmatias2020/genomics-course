@@ -3,6 +3,7 @@ title: "EvoGeno Lab 5"
 author: "Bryanna Matias"
 date: "9/21/2020"
 output: html_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -318,7 +319,9 @@ time_series_long_joined %>%
                                 colour = "Purple")) 
 ```
 
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
 
+# References
 
 
 
