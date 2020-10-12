@@ -164,7 +164,7 @@ ggplotly(
 #Create a report with static maps and interactive graphs that is meant to be read by others (e.g. your friends and family). Hide warnings, messages and even the code you used so that it is readable. Included references. Link to the Lab 6 report from your Github site. Submit the link to Moodle.
 ```
 
-* Lab 6x: [Covid-19 Reports](EvoGeno_Lab6Report.html) 
+* Lab 6 Report: [Covid-19 Reports](EvoGeno_Lab6Report.html) 
 
 Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015]. Data aquired from [@JohnsHopkinsUniversity].
 
