@@ -30,3 +30,28 @@ knitr::opts_chunk$set(echo = TRUE)
 * Lab 5x: [Interactive Graphs and Animations from the COVID-19 reporting data](EvoGeno_Lab5x.html)
 
 * Lab 6: [Data Maps, Interactive Graphs and Animations from the COVID-19 reporting data](EvoGeno_Lab6.html)
+
+* Lab 7: [RNA-Seq workflow: gene-level exploratory analysis and differential expression](EvoGeno_Lab7.html)
+
+* Lab 8a: [Sequence Alignment, Phylogenetic Analysis and Tree Visualization]
+
+* Lab 8b: [Tree Visualization using ggtree]
+
+* Lab 8x: [NCBI databases]
+
+* Lab 9: [Programming in R - Regular Expressions]
+
+* Lab 9x: [Programming in R - Control Structures and Functions]
+
+* Lab 10: [Population genomics based on high throughput sequencing (HTS)]
+
+* Lab 11: [Microbiome Analysis using dada2 and phyloseq]
+
+* Lab 11x: [Microbiome Analysis using phyloseq]
+
+* Lab 12: [Network Analysis using Cytoscape and RCy3]
+
+* Lab 13: []
+
+
+
