@@ -314,3 +314,6 @@ str_split(x, boundary("word"))[[1]]
 y <- "apples, pears, and bananas."
 str_view_all(y, boundary("word"))
 ```
+
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
+# REFERENCES
