@@ -1,0 +1,269 @@
+---
+title: "Lab 8"
+author: "Bryanna Matias"
+date: "11/27/2020"
+output: html_document
+bibliography: references.bib
+---
+
+```{r}
+BiocManager::install("ggtree")
+```
+
+```{r}
+library(tidyverse)
+library(ggtree)
+library(treeio)
+library(ggimage)
+```
+# Exercises
+
+## Exercise 1
+```{r, ex1}
+#Use NGPhylogeny.fr to analysis the set of rRNA sequence provided. Describe the methods and put the .png file from your analysis into your Lab 8 .Rmd file
+ppi <- 300
+png("lab8trees.png", width=3*ppi, height=3*ppi, res=ppi)
+```
+![Tree from NGPhylogeny.fr](images/lab8trees.PNG)
+
+# Exercise 2
+```{r, ex2}
+# Align and do phylogenetic analysis off the sequences in CIPRES using MAFFT and FastTreeMP. You will need to click on Parameter Set and Save even if you don’t change the parameters. Download the fastree_result.tre to your computer. Put the resulting tree file in your .Rmd file
+tree2 <- read.tree("data/TOL_fasttree_result.tre")
+ggtree(tree2) +
+  geom_tiplab(hjust=-.1, size = 3) 
+```
+
+# Exercise 3: ggtree tutorial
+
+* Basic Trees
+```{r}
+tree <- read.tree("data/tree_newick.nwk")
+```
+```{r}
+# build a ggplot with a geom_tree
+ggplot(tree) + geom_tree() + theme_tree()
+```
+```{r}
+# This is convenient shorthand
+ggtree(tree)
+```
+```{r}
+# add a scale
+ggtree(tree) + geom_treescale()
+```
+```{r}
+# or add the entire scale to the x axis with theme_tree2()
+ggtree(tree) + theme_tree2()
+```
+```{r}
+# disable scaling and produce a cladogram
+ggtree(tree, branch.length="none")
+```
+```{r}
+# Let’s draw a cladogram (no branch scaling) using thick blue dotted lines
+ggtree(tree, branch.length="none", color="blue", size=2, linetype=3)
+```
+* 3.1
+```{r, ex3.1}
+#Create a slanted phylogenetic tree.
+ggtree(tree, layout = "slanted") + theme_tree()
+```
+
+```{r}
+#Create a circular phylogenetic tree.
+ggtree(tree, layout = "circular") + theme_tree()
+```
+```{r}
+#Create a circular unscaled cladogram with thick red lines.
+ggtree(tree, layout = "circular", color="red", size=2, linetype=3)
+```
+
+* Other Tree Geoms
+```{r}
+#Let’s add additional layers.
+# Let’s add node and tip points. Let’s finally label the tips.
+# create the basic plot
+p <- ggtree(tree)
+# add node points
+p + geom_nodepoint()
+```
+```{r}
+# add tip points
+p + geom_tippoint()
+```
+```{r}
+# Label the tips
+p + geom_tiplab()
+```
+
+* 3.2
+```{r, ex3.2}
+#Create a phylogeny with the following aesthetic characteristics:
+# tips labeled in purple
+# purple-colored diamond-shape tip points (hint: Google search “R point characters”)
+# large semitransparent yellow node points (hint: alpha=)
+# Add a title with + ggtitle(...)
+ggtree(tree) + geom_nodepoint(col = "yellow", alpha = 0.5) + geom_tippoint(pch = 5, col = "purple") + ggtitle("Phylogony Example") + geom_tiplab(col = "purple")
+```
+* Tree annotation( Link was not working)
+
+* Internal node number
+```{r,internal_node_num}
+# To get the internal node number, user can use geom_text to display it, where the label is an aesthetic mapping to the “node variable” stored inside the tree object
+# We also supply the hjust option so that the labels aren’t sitting right on top of the nodes
+ggtree(tree) + geom_text(aes(label=node), hjust=-.3)
+```
+```{r}
+# Another way to get the internal node number is using MRCA() function by providing a vector of taxa names 
+#First, re-create the plot so you can choose which taxa you want to grab the MRCA from.
+ggtree(tree) + geom_tiplab()
+```
+```{r}
+# Let’s grab the most recent common ancestor for taxa C+E, and taxa G+H.
+MRCA(tree, c("C", "E"))
+MRCA(tree, c("G", "H"))
+```
+
+* Labeling clades
+```{r}
+# Let’s annotate the clade with the most recent common ancestor between taxa C and E. Let’s make the annotation red.
+ggtree(tree) + 
+  geom_cladelabel(node=17, label="Some random clade", color="red")
+```
+```{r}
+# Let’s add back in the tip labels. Notice how now the clade label is too close to the tip labels. Let’s add an offset to adjust the position.
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_cladelabel(node=17, label="Some random clade", 
+                  color="red2", offset=.8)
+```
+```{r}
+# Now let’s add another label for the clade connecting taxa G and H (internal node 21).
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_cladelabel(node=17, label="Some random clade", 
+                  color="red2", offset=.8) + 
+  geom_cladelabel(node=21, label="A different clade", 
+                  color="blue", offset=.8)
+
+# Fixing Problem: align=TRUE to geom_cladelabel
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_cladelabel(node=17, label="Some random clade", 
+                  color="red2", offset=.8, align=TRUE) + 
+  geom_cladelabel(node=21, label="A different clade", 
+                  color="blue", offset=.8, align=TRUE) + 
+  theme_tree2() + 
+  xlim(0, 70) + 
+  theme_tree()
+```
+```{r}
+# Alternatively, we could highlight the entire clade with geom_hilight().
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_hilight(node=17, fill="gold") + 
+  geom_hilight(node=21, fill="purple")
+```
+
+* Connecting taxa
+```{r}
+# Some evolutionary events (e.g. reassortment, horizontal gene transfer) can be visualized with some simple annotations on a tree. The geom_taxalink() layer draws straight or curved lines between any of two nodes in the tree, allow it to show evolutionary events by connecting taxa. 
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_taxalink("E", "H", color="blue3") +
+  geom_taxalink("C", "G", color="orange2", curvature=-.9)
+```
+
+*3.3
+```{r, ex3.3}
+# Produce the figure
+ggtree(tree) + 
+  theme_tree2() +
+  geom_cladelabel(node=17, label="Superclade 17", 
+                  color="red2", offset=.8, align=TRUE) +
+  geom_tiplab() + 
+  geom_taxalink("C", "E", linetype = "dashed") +
+  geom_taxalink("G", "J", linetype = "dashed", curvature=.9) +
+  geom_hilight(node=19, fill="blue") + 
+  geom_hilight(node=23, fill="orange") +
+  xlim(0, 70) + 
+  theme_tree()
+```
+
+* Advanced tree annotation
+```{r, adv_tree_annotation}
+# Read the data
+tree3 <- read.beast("data/flu_tree_beast.tree")
+# supply a most recent sampling date so you get the dates
+# and add a scale bar
+ggtree(tree3, mrsd="2013-01-01") + 
+  theme_tree2() 
+# Finally, add tip labels and adjust axis
+ggtree(tree3, mrsd="2013-01-01") + 
+  theme_tree2() + 
+  geom_tiplab(align=TRUE, linesize=.5) + 
+  xlim(1990, 2020)
+```
+```{r}
+msaplot(p=ggtree(tree3), fasta="data/flu_aasequence.fasta", window=c(150, 175))
+```
+* Bonus!
+```{r, ManyTrees}
+# Let’s generate 3 replicates each of 4 random trees with 10, 25, 50, and 100 tips, plotting them all.
+set.seed(42)
+trees <- lapply(rep(c(10, 25, 50, 100), 3), rtree)
+class(trees) <- "multiPhylo"
+ggtree(trees) + facet_wrap(~.id, scale="free", ncol=4) + ggtitle("Many trees. Such phylogenetics. Wow.")
+```
+```{r, Plot_tree_with_other_data}
+# For showing a phylogenetic tree alongside other panels with your own data, the facet_plot() function accepts a input data.frame and a geom function to draw the input data.
+
+# Generate a random tree with 30 tips
+tree <- rtree(30)
+# Make the original plot
+p <- ggtree(tree)
+# generate some random values for each tip label in the data
+d1 <- data.frame(id=tree$tip.label, val=rnorm(30, sd=3))
+# Make a second plot with the original, naming the new plot "dot", 
+# using the data you just created, with a point geom.
+p2 <- facet_plot(p, panel="dot", data=d1, geom=geom_point, aes(x=val), color='red3')
+# Make some more data with another random value.
+d2 <- data.frame(id=tree$tip.label, value = abs(rnorm(30, mean=100, sd=50)))
+# Now add to that second plot, this time using the new d2 data above, 
+# This time showing a bar segment, size 3, colored blue.
+p3 <- facet_plot(p2, panel='bar', data=d2, geom=geom_segment, 
+           aes(x=0, xend=value, y=y, yend=y), size=3, color='blue4') 
+# Show all three plots with a scale
+p3 + theme_tree2()
+```
+```{r, Overlay_organism_silouhettes}
+# phylopic.org hosts free silhouette images of animals, plants, and other life forms, all under Creative Commons or Public Domain. You can use ggtree to overlay a phylopic image on your plot at a node of your choosing.
+
+newick <- "((Pongo_abelii,(Gorilla_gorilla_gorilla,(Pan_paniscus,Pan_troglodytes)Pan,Homo_sapiens)Homininae)Hominidae,Nomascus_leucogenys)Hominoidea;"
+tree <- read.tree(text=newick)
+d <- ggimage::phylopic_uid(tree$tip.label)
+d$body_mass = c(52, 114, 47, 45, 58, 6)
+p <- ggtree(tree) %<+% d + 
+  geom_tiplab(aes(image=uid, colour=body_mass), geom="phylopic", offset=2.5) +
+  geom_tiplab(aes(label=label), offset = .2) + xlim(NA, 7) +
+  scale_color_viridis_c()
+p  
+```
+
+## Exercise 4
+```{r, ex4}
+# Upload your tree file from the FastTreeMP output on CIPRES. 
+ggtree(tree2, layout = "circular") +
+  geom_tiplab(hjust=-.1, size = 3) +
+  geom_text(aes(label=node), hjust=.4)
+ggtree(tree2, layout = "circular") +
+  geom_tiplab(hjust=-.1, size = 3) +
+  geom_hilight(node=22, fill="purple", extend = 0.5, alpha = 0.1) +
+  geom_hilight(node=29, fill="gold", extend = 0.5) +
+  geom_hilight(node=26, fill="pink", extend = 0.5) 
+```
+
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
+# REFERENCES
+
