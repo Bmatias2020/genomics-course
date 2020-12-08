@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ![](images/Profile.jpg){width=50%}
+![](images/Genomics.JPG){width=50%}
 
 ## R Labs
 
@@ -43,7 +44,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 11: [Microbiome Analysis using dada2 and phyloseq](EvoGeno_Lab11.html)
 
-* Lab 11x: [Microbiome Analysis using phyloseq](EvoGeno_Lab11)
+* Lab 11x: [Microbiome Analysis using phyloseq](EvoGeno_lab11x.html)
 
 * Lab 12: [Network Analysis using Cytoscape and RCy3]
 
