@@ -1,0 +1,285 @@
+---
+title: "Lab 10"
+author: "Bryanna Matias"
+date: "12/7/2020"
+output: html_document
+bibliography: references.bib
+---
+
+# Downloading VCF file structures
+```{r}
+library("vcfR")
+library("poppr")
+library("adegenet")
+library("reshape2")
+library("ggplot2")
+```
+
+# Part I: Reading VCF data
+
+```{r, vcf_file_str}
+data(vcfR_example)
+vcf
+```
+
+* The meta region
+
+```{r, meta_region}
+# The meta region contains information about the file, its creation, as well as information to interpret abbreviations used elsewhere in the file. Each line of the meta region begins with a double pound sign (‘##’). 
+strwrap(vcf@meta[1:7])
+
+# The meta region may include long lines that may not be easy to view. In vcfR we’ve created a function to help press this data.
+queryMETA(vcf)
+
+# When the function queryMETA() is called with only a vcfR object as a parameter, it attempts to summarize the meta information. Not all of the information is returned. This is an attempt to summarize information that may be most useful for comprehension of the file’s contents.
+queryMETA(vcf, element = 'DP')
+
+# When an element parameter is included, only the information about that element is returned. In this example the element ‘DP’ is returned. We see that this acronym is defined as both a ‘FORMAT’ and ‘INFO’ acronym. We can narrow down our query by including more information in the element parameter.
+queryMETA(vcf, element = 'FORMAT=<ID=DP')
+```
+
+* The Fix Region
+
+```{r, fix_region}
+# The function getFIX() will suppress this column by default. Each abbreviation in the INFO column should be defined in the meta section. We can validate this by querying the meta portion, as we did in the ‘meta’ section above.
+head(getFIX(vcf))
+```
+
+* The gt Region
+
+```{r, gt_region}
+# The gt (genotype) region contains information about each variant for each sample. The values for each variant and each sample are colon delimited. Multiple types of data for each genotype may be stored in this manner. The format of the data is specified by the FORMAT column (column nine).
+vcf@gt[1:6, 1:4]
+```
+
+* vcfR
+
+```{r}
+# Using the R package vcfR, we can read VCF format files into memory using the function read.vcfR(). 
+vcf <- read.vcfR("data/pinfsc50_filtered.vcf.gz")
+```
+
+```{r}
+# Once in memory we can use the head() method to summarize the information in the three VCF regions.
+head(vcf)
+#After we have made any manipulations of the file we can save it as a VCF file with the function write.vcf().
+write.vcf(vcf, "myVCFdata_filtered.vcf.gz")
+```
+
+## Exercises Part I
+```{r}
+# 1) How would we find more information about read.vcfR()?
+?read.vcfR
+```
+```{r}
+# 2) How would we learn what the acronym “AD” stands for?
+queryMETA(vcf, element = 'AD')
+```
+```{r}
+# 3) We used the head() function to view the first few lines of fix data. How would we view the last few lines of fix data?
+tail(vcf@fix)
+```
+```{r}
+# 4) There is a column in the fix portion of the data called QUAL. It is not defined in the meta portion of the data because it is defined in the VCF specification. It stands for ‘quality’. Does QUAL appear useful to us? Why or why not?
+plot(vcf)
+```
+```{r}
+# 5) How would we query the sample names?
+colnames(vcf@gt)
+```
+
+# Part II: Analysis of Genome Data
+
+* Opening and examining the dataset
+
+```{r, open_examine_data}
+# We’ll read our VCF data into R using the function read.vcfR().
+vcf <- read.vcfR("data/pinfsc50_filtered.vcf.gz")
+# Once the file is read in we can validate its contents using the show method which is implemented by executing the object’s name at the prompt.
+vcf
+```
+
+* Converting VCF data to a genlight object
+```{r, genlight}
+# Here we use the function vcfR2genlight() to convert our vcfR object to a genlight object. This makes our VCF data available to the analyses in adegenet.
+x <- vcfR2genlight(vcf)
+# Call object x
+x
+```
+```{r, vcfr}
+gt <- extract.gt(vcf, element = "GT")
+gt[c(2,6,18), 1:3]
+```
+```{r, convert_to_genlight}
+# genlight
+t(as.matrix(x))[c(1,5,17), 1:3]
+```
+```{r}
+# Because there is no population data in VCF data, if we want population data we’ll have to set it ourselves
+pop(x) <- as.factor(c("us", "eu", "us", "af", "eu", "us", "mx", "eu", "eu", "sa", "mx", "sa", "us", "sa", "Pmir", "us", "eu", "eu"))
+popNames(x)
+```
+```{r}
+#Here we’ll set the ploidy of all the samples in the genlight object to the same ploidy.
+ploidy(x) <- 2
+```
+* Distance matrices
+
+```{r, dist_matrices}
+# we can create a distance matrix from a genlight object using dist():
+x.dist <- dist(x)
+
+# There are also functions to create distance matrices from genlight objects that exist in other packages. The function bitwise.dist() in the package poppr is an example.We can use this function as follows.
+x.dist <- poppr::bitwise.dist(x)
+```
+
+* Creating chromR objects
+```{r, chromr_obj_ex1}
+# In this example we will begin by locating the example data from the pinfsc50 package.
+
+# Find the files.
+vcf_file <- system.file("extdata", "pinf_sc50.vcf.gz", package = "pinfsc50")
+dna_file <- system.file("extdata", "pinf_sc50.fasta", package = "pinfsc50")
+gff_file <- system.file("extdata", "pinf_sc50.gff", package = "pinfsc50")
+
+# Input the files.
+vcf <- read.vcfR(vcf_file, verbose = FALSE)
+dna <- ape::read.dna(dna_file, format = "fasta")
+gff <- read.table(gff_file, sep="\t", quote="")
+
+# Create a chromR object.
+chrom <- create.chromR(name="Supercontig", vcf=vcf, seq=dna, ann=gff, verbose=TRUE)
+```
+
+```{r, chromr_obj_ex2}
+# By executing the object’s name at the console, with no other arguments, we invoke the object’s ‘show’ method. The show method for chromR objects presents a summary of the object’s contents.
+chrom
+# There at least two ways to graphically view the chromR object. The first is plot() which plots histograms of some of data summaries.
+plot(chrom)
+
+```
+
+```{r, chromr_obj_ex3}
+# The simplest interpretation here is that QUAL may not be a good parameter to use to judge your variants. The last panel for SNP densities is empty because this data is created during the processing of chromR objects. Our second plot, called chromo plot, displays the same information as the plot method only it distributes the data along its chomosomal coordinates.
+chromoqc(chrom, dp.alpha = 66)
+```
+
+* Processing chromR objects
+
+```{r}
+# Creation and processing of a chromR object has been divided into separate tasks. Creation loads the data into the chromR object and should typically only be required once. Processing the chromR object generates summaries of the data. Some of these summaries will need to be updated as the chromR object is updated.
+chrom <- proc.chromR(chrom, verbose = TRUE)
+plot(chrom)
+```
+```{r}
+chromoqc(chrom, dp.alpha = 66)
+# The above data is an example of visualizing raw data that has come from a variant caller and other automated sources.
+```
+
+```{r}
+vcf <- read.vcfR("data/pinfsc50_filtered.vcf.gz", verbose = FALSE)
+chrom <- create.chromR(name="Supercontig", vcf=vcf, seq=dna, ann=gff, verbose=FALSE)
+chrom <- proc.chromR(chrom, verbose = FALSE)
+chromoqc(chrom, dp.alpha = 66)
+```
+* Tabular summaries
+
+```{r, tab_sum}
+# When we process a chromR object, two forms of tabular data are created. First, summaries are made on a per variant basis. Second, summaries are made on a per window basis. 
+head(chrom@var.info)
+# Window size can be changed with the win.size parameter of the function proc.chromR().
+head(chrom@win.info)
+# While loading entire genomes into memory may not be practical due to resource limitations, it is frequently practical to break a genome up into fractions that can be processed given the resources available on any system.
+```
+
+* Genetic Differentiation
+
+```{r}
+# A fundamental question to most population studies is whether populations are diverse and whether this diversity is shared among the populations? To address the question of within population diversity geneticists typically report heterozygosity.
+data(vcfR_example)
+pop <- as.factor(c("us", "eu", "us", "af", "eu", "us", "mx", "eu", "eu", "sa", "mx", "sa", "us", "sa", "Pmir", "us", "eu", "eu"))
+
+#In vcfR, the function genetic_diff() was implemented to measure population diversity and differentiation.Because VCF data typically do not include population information we’ll have to supply it as a factor. 
+myDiff <- genetic_diff(vcf, pops = pop, method = 'nei')
+
+# Heterozygosities are weighted by the number of alleles observed in each population. This was inspired by hierfstat::pairwise.fst() which uses the number of individuals observed in each population to weight the heterozygosities.
+# By using the number of alleles observed instead of the number of individuals we remove an assumption about how many alleles each individual may contribute. That is, we should be able to accomodate samples of mixed ploidy.
+knitr::kable(head(myDiff[,1:15]))
+```
+```{r}
+# Note that in some populations zero alleles were observed. Populations with zero alleles reported heterozygosities of ‘NaN’ because of this absence of data.
+knitr::kable(head(myDiff[,16:19]))
+
+# We now have information for each variant in the VCF data. Because this is typically a large quantity of information, we’ll want to summarize it. One way is to take averages of the data.
+knitr::kable(round(colMeans(myDiff[,c(3:9,16,19)], na.rm = TRUE), digits = 3))
+```
+
+```{r}
+# Another way to summarize data is to use violin plots.
+dpf <- melt(myDiff[,c(3:8,19)], varnames=c('Index', 'Sample'), value.name = 'Depth', na.rm=TRUE)
+
+p <- ggplot(dpf, aes(x=variable, y=Depth)) + geom_violin(fill="#2ca25f", adjust = 1.2)
+p <- p + xlab("")
+p <- p + ylab("")
+p <- p + theme_bw()
+p
+```
+
+## Exercises Part II
+```{r}
+# 1) You actually have everything you need to make a Manhattan plot. Can you figure out how to plot G′ST (y-axis) by genomic position (POS)?
+myDiff <- genetic_diff(vcf, pops = pop, method = 'nei')
+plot(getPOS(vcf), myDiff$Gprimest, pch = 20, col = "#1E90FF44", xlab = "", ylab = "", ylim = c(0, 1), xaxt = "n")
+axis(side = 1, at = seq(0, 1e5, by = 1e4), labels = seq(0, 100, by = 10))
+title(xlab='Genomic position (Kbp)')
+title(ylab = expression(italic("G'"["ST"])))
+```
+
+```{r}
+# 2) This Manhatttan plot shouldlook a bit unusual. Can you think of anything that may be wrong with this analysis?
+table(pop)
+```
+```{r}
+# The sample is so small
+# 3) Can you figure out how to zoom in on a particular region of a chromosome in chromoqc()?
+chromoqc(chrom, dp.alpha = 66, xlim = c(2e05, 4e05))
+```
+```{r}
+# 4) Can you use the function queryMETA() to look for other data in your file that may be of interest?
+queryMETA(vcf)
+```
+
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
+# REFERENCES
+
+Danecek, Petr, Adam Auton, Goncalo Abecasis, Cornelis A Albers, Eric Banks, Mark A DePristo, Robert E Handsaker, et al. 2011. “The Variant Call Format and VCFtools.” Bioinformatics 27 (15): 2156–8. https://doi.org/10.1093/bioinformatics/btr330.
+
+Grünwald, Niklaus J, Bruce A McDonald, and Michael G Milgroom. 2016. “Population Genomics of Fungal and Oomycete Pathogens.” Annual Review of Phytopathology 54: 323–46. https://doi.org/0.1146/annurev-phyto-080614-115913.
+
+Hedrick, Philip W. 2005. “A Standardized Genetic Differentiation Measure.” Evolution 59 (8): 1633–8. http://dx.doi.org/10.1111/j.0014-3820.2005.tb01814.x.
+
+Jombart, Thibaut. 2008. “adegenet
+: A R Package for the Multivariate Analysis of Genetic Markers.” Bioinformatics 24 (11): 1403–5. https://doi.org/10.1093/bioinformatics/btn129.
+
+Jost, Lou. 2008. “GST
+ And Its Relatives Do Not Measure Differentiation.” Molecular Ecology 17 (18): 4015–26. http://dx.doi.org/10.1111/j.1365-294X.2008.03887.x.
+
+Kamvar, Zhian N, Jonah C Brooks, and Niklaus J Grünwald. 2015. “Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality.” Name: Frontiers in Genetics 6: 208. https://doi.org/10.3389/fgene.2015.00208.
+
+Kamvar, Z N, J F Tabima, and Niklaus J Grünwald. 2014. “Poppr
+: An R Package for Genetic Analysis of Populations with Clonal, Partially Clonal, and/or Sexual Reproduction.” PeerJ 2: e281. https://doi.org/10.7717/peerj.281.
+
+Knaus, Brian J, and Niklaus J Grünwald. 2017. “Vcfr
+: A Package to Manipulate and Visualize Variant Call Format Data in R.” Molecular Ecology Resources 17 (1): 44–53. http://dx.doi.org/10.1111/1755-0998.12549.
+
+Luikart, Gordon, Phillip R England, David Tallmon, Steve Jordan, and Pierre Taberlet. 2003. “The Power and Promise of Population Genomics: From Genotyping to Genome Typing.” Nature Reviews Genetics 4 (12): 981–94. https://doi.org/10.1038/nrg1226.
+
+Nei, Masatoshi. 1973. “Analysis of Gene Diversity in Subdivided Populations.” Proceedings of the National Academy of Sciences 70 (12): 3321–3. http://www.pnas.org/content/70/12/3321.abstract.
+
+Paradis, Emmanuel, Julien Claude, and Korbinian Strimmer. 2004. “APE: Analyses of Phylogenetics and Evolution in R Language.” Bioinformatics 20 (2): 289–90. https://doi.org/10.1093/bioinformatics/btg412.
+
+Paradis, Emmanuel, Thierry Gosselin, Niklaus J Grünwald, Thibaut Jombart, Stéphanie Manel, and Hilmar Lapp. 2017. “Towards an Integrated Ecosystem of R Packages for the Analysis of Population Genetic Data.” Molecular Ecology Resources 17 (1): 1–4. https://doi.org/10.1111/1755-0998.12636.
+
+Simpson, Edward H. 1949. “Measurement of Diversity.” Nature 163: 688. http://dx.doi.org/10.1038/163688a0.
+
+Wright, Sewall. 1949. “The Genetical Structure of Populations.” Annals of Eugenics 15 (1): 323–54. https://doi.org/10.1111/j.1469-1809.1949.tb02451.x.
