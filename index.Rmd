@@ -37,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 9: [Programming in R - Regular Expressions](EvoGeno_Lab9.html)
 
-* Lab 9x: [Programming in R - Control Structures and Functions]
+* Lab 9x: [Programming in R - Control Structures and Functions](EvoGeno_Lab9x.html)
 
 * Lab 10: [Population genomics based on high throughput sequencing (HTS)]
 
