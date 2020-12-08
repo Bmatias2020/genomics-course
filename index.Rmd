@@ -33,13 +33,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 7: [RNA-Seq workflow: gene-level exploratory analysis and differential expression](EvoGeno_Lab7.html)
 
-* Lab 8a: [Sequence Alignment, Phylogenetic Analysis and Tree Visualization](EvoGeno_Lab8.html)
+* Lab 8: [Sequence Alignment, Phylogenetic Analysis and Tree Visualization](EvoGeno_Lab8.html)
 
-* Lab 8b: [Tree Visualization using ggtree]
-
-* Lab 8x: [NCBI databases]
-
-* Lab 9: [Programming in R - Regular Expressions]
+* Lab 9: [Programming in R - Regular Expressions](EvoGeno_Lab9.html)
 
 * Lab 9x: [Programming in R - Control Structures and Functions]
 
