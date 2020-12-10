@@ -2,7 +2,11 @@
 title: "Evolutionary Genomics & Bioinformatics"
 author: "Bryanna Matias"
 date: "8/31/2020"
-output: html_document
+output: 
+ prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -46,9 +50,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Lab 11x: [Microbiome Analysis using phyloseq](EvoGeno_lab11x.html)
 
-* Lab 12: [Network Analysis using Cytoscape and RCy3]
+* Lab 12: [Network Analysis using Cytoscape and RCy3](EvoGeno_Lab12.html)
 
-* Lab 13: []
+* Lab 13: [Sprucing up your Rmarkdown and GitHub Page](EvoGeno_Lab13.html)
 
 
 

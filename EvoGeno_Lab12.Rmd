@@ -1,0 +1,147 @@
+---
+title: "Lab 12"
+author: "Bryanna Matias"
+date: "12/7/2020"
+output: html_document
+bibliography: references.bib
+---
+# Cytoscape
+
+* Tour of Cytoscape
+
+![](images/Cytoscape_Tour.png)
+
+* Basic Data Visalization
+
+![](images/Basic_Visualization.png)
+
+* Differentially Expressed Genes
+
+![](images/DEG_Tutorials.png)
+![](images/Deg_tutorial.png)
+
+# RCy3 Tutorial
+
+```{r}
+library(RCy3)
+cytoscapePing()
+cytoscapeVersionInfo ()
+```
+```{r}
+browseVignettes("RCy3")
+```
+
+```{r}
+# My First network
+nodes <- data.frame(id=c("node 0","node 1","node 2","node 3"),
+           group=c("A","A","B","B"), # categorical strings
+           score=as.integer(c(20,10,15,5)), # integers
+           stringsAsFactors=FALSE)
+edges <- data.frame(source=c("node 0","node 0","node 0","node 2"),
+           target=c("node 1","node 2","node 3","node 3"),
+           interaction=c("inhibits","interacts","activates","interacts"),  # optional
+           weight=c(5.1,3.0,5.2,9.9), # numeric
+           stringsAsFactors=FALSE)
+createNetworkFromDataFrames(nodes,edges, title="my first network", collection="DataFrame Example")
+```
+
+```{r}
+# Switch Styles
+setVisualStyle('Marquee')
+```
+
+```{r}
+# My own style
+style.name = "myStyle"
+defaults <- list(NODE_SHAPE="diamond",
+                 NODE_SIZE=30,
+                 EDGE_TRANSPARENCY=120,
+                 NODE_LABEL_POSITION="W,E,c,0.00,0.00")
+nodeLabels <- mapVisualProperty('node label','id','p')
+nodeFills <- mapVisualProperty('node fill color','group','d',c("A","B"), c("#FF9900","#66AAAA"))
+arrowShapes <- mapVisualProperty('Edge Target Arrow Shape','interaction','d',c("activates","inhibits","interacts"),c("Arrow","T","None"))
+edgeWidth <- mapVisualProperty('edge width','weight','p')
+createVisualStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
+setVisualStyle(style.name)
+```
+```{r}
+lockNodeDimensions(FALSE, style.name)
+```
+```{r eval = FALSE} 
+# Bioconductor Graph Example
+  g = new ('graphNEL', edgemode='directed')
+    g = graph::addNode ('A', g)
+    g = graph::addNode ('D', g)
+    g = graph::addNode ('C', g, edges = list('D'))
+    g = graph::addNode ('B', g, edges = list(c('A','D','C')))
+    createNetworkFromGraph (g, title='simple network', collection='GraphNEL Example')
+```
+
+```{r eval = FALSE}
+# Adding node attributes
+  df <- data.frame (moleculeType=c('kinase','TF','cytokine','cytokine'),
+                     log2fc=c(1.8,3.0,-1.2,-2.5),
+                     row.names = c('A','B','C','D'), # row.names = node names
+                     stringsAsFactors = FALSE)       # important when loading strings!
+    loadTableData (df)
+```
+```{r eval = FALSE}
+# Modifying the display: defaults and mappings
+ setNodeShapeDefault ('OCTAGON')
+    setNodeColorDefault ('#AAFF88')
+    setNodeSizeDefault  (60)
+    setNodeFontSizeDefault (30)
+```
+```{r eval = FALSE}
+    getNodeShapes()
+    column <- 'moleculeType'
+    values <- c ('kinase',  'TF','cytokine')
+    shapes <- c ('DIAMOND', 'TRIANGLE', 'RECTANGLE')
+    setNodeShapeMapping (column, values, shapes)
+```
+```{r eval = FALSE}
+ column <- 'log2fc'
+    control.points <- c (-3.0, 0.0, 3.0)
+    colors <-  c ('#5588DD', '#FFFFFF', '#DD8855')
+    setNodeColorMapping (column, control.points, colors)
+```
+```{r eval = FALSE}
+ control.points <- c (-2.0, 0.0, 2.0)
+    colors <-  c ('#2255CC', '#5588DD', '#FFFFFF', '#DD8855','#CC5522')
+    setNodeColorMapping (column, control.points, colors)
+```
+```{r eval = FALSE}
+   control.points = c (-3.0, 2.0, 3.0)
+    sizes     = c (20, 80, 90)
+    setNodeSizeMapping (column, control.points, sizes)
+```
+```{r eval = FALSE}
+# Selecting nodes
+  selectNodes ('C','name')
+  getSelectedNodes()
+```
+```{r eval = FALSE}
+   selectFirstNeighbors ()
+```
+```{r eval = FALSE}
+ node.names <- getSelectedNodes ()
+```
+```{r eval = FALSE}
+clearSelection()
+?clearSelection
+```
+```{r eval = FALSE}
+# Saving and Export
+saveSession('vignette_session') 
+```
+
+```{r eval = FALSE}
+full.path=paste(getwd(),'vignette_image',sep='/')
+    exportImage(full.path, 'PNG', zoom=150)
+    exportImage(full.path, 'PDF') 
+    ?exportImage
+```
+
+![](images/my first network.png)
+Application written in R [@RCoreTeam] using the Shiny framework [@Chang2015].
+# REFERENCES
