@@ -1,0 +1,14 @@
+---
+title: "Lab 13"
+author: "Bryanna Matias"
+date: "12/7/2020"
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+bibliography: references.bib
+---
+
+# Here is the link to my new website:
+
+https://bmatias2020.github.io/MyNewWebsite/
